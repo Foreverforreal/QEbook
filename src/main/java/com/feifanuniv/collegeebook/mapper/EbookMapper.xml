@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.feifanuniv.collegeebook.mapper.EbookMapper">
+
+	<select id="selectAllEbook" resultType="Ebook">
+		select * from [QingShuSvc].[dbo].[EBookInfo]
+	</select>
+	
+	<select id="selectEbookByAllFields" resultType="Ebook" parameterType="Ebook">
+		select * from [QingShuSvc].[dbo].[EBookInfo]
+		<where>
+				<if test="SSId!= null and SSId!=''">
+				SSId like '${SSId}%'
+				</if>
+				<if test="bookName!= null and bookName!=''">
+				and BookName like '%${bookName}%'
+				</if>
+				<if test="author!= null and author!=''">
+				and Author like '%${author}%'
+				</if>
+				<if test="publisher!= null and publisher!=''">
+				and Publisher like '%${publisher}%'
+				</if>
+		</where>
+	</select>
+	
+	<select id="selectEbookByBookName" resultType="Ebook" parameterType="String">
+		select * from EBookInfo where BookName like '%${value}%'
+	</select>
+	
+	<select id="selectEbookBySSId" resultType="Ebook" parameterType="java.util.List">
+		select * from EBookInfo where SSId in(
+		<foreach collection="list" item="item" index="index" separator=",">
+			#{item}
+		</foreach>
+		)
+	</select>
+	
+	<select id="selectEbookById"   resultType="Ebook" parameterType="int">
+		select * from EBookInfo where Id=#{id}
+	</select>
+	
+	<update id="deleteEbook" parameterType="int">
+		delete from EBookInfo where Id=#{id}
+	</update>
+	
+	<insert id="insertEbook" parameterType="Ebook">
+	  	insert EBookInfo(SSId,DXId,BookKey,BookName,Author,Publisher,BookPath,CoverImgPath,BookStatus)
+	  	values (#{SSId},#{DXId},#{bookKey},#{bookName},#{author},#{publisher},#{bookPath},#{coverImgPath},#{bookStatus})
+	</insert>
+	
+</mapper>
